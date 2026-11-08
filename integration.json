@@ -1,0 +1,342 @@
+{
+  "schemaVersion": 1,
+  "id": "netlify-mcp",
+  "kind": "provider-connector",
+  "artifactType": "connector",
+  "qualityVersion": 2,
+  "title": "Netlify MCP server",
+  "description": "Inspect site deployments then explicitly trigger a reviewed Git build. Read provider data first, then explicitly approve the selected change with operator write opt-in and a unique per-call approval key.",
+  "status": "ready",
+  "verification": "mock-only",
+  "releaseEligible": true,
+  "maintainer": "jannikco",
+  "license": "MIT",
+  "product": "pipmcp",
+  "appSlug": "netlify",
+  "appName": "Netlify",
+  "operationIds": [
+    "list_sites",
+    "list_deploys",
+    "create_build"
+  ],
+  "sourceRevision": "8fc866bf4a6b1995342676067329cdbfd470bf352254fdec28ee035a75d712ab",
+  "evidence": [
+    "Actual tools/call and direct-provider request contract tests"
+  ],
+  "provenance": [
+    "https://open-api.netlify.com/swagger.json"
+  ],
+  "attributionSlug": "github-netlify-mcp",
+  "connectorId": "netlify",
+  "connector": {
+    "id": "netlify",
+    "appSlug": "netlify",
+    "name": "Netlify",
+    "version": "0.2.0",
+    "baseUrl": "https://api.netlify.com/api/v1",
+    "auth": {
+      "type": "bearer",
+      "env": "NETLIFY_ACCESS_TOKEN"
+    },
+    "tools": [
+      {
+        "name": "list_sites",
+        "description": "List sites.",
+        "method": "GET",
+        "path": "/sites",
+        "readOnly": true,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "page": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100000
+            },
+            "per_page": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "bindings": {
+          "path": [],
+          "query": {
+            "page": "page",
+            "per_page": "per_page"
+          },
+          "body": {}
+        },
+        "sampleArguments": {
+          "per_page": 10
+        },
+        "provenance": [
+          "https://open-api.netlify.com/swagger.json"
+        ],
+        "approvalRequired": false,
+        "evidence": {
+          "providerLiveValidation": "not-run",
+          "localValidation": "provider-request-fixture"
+        }
+      },
+      {
+        "name": "list_deploys",
+        "description": "List deploys.",
+        "method": "GET",
+        "path": "/sites/{site_id}/deploys",
+        "readOnly": true,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "site_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "description": "Value"
+            },
+            "page": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100000
+            },
+            "per_page": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          "required": [
+            "site_id"
+          ],
+          "additionalProperties": false
+        },
+        "bindings": {
+          "path": [
+            "site_id"
+          ],
+          "query": {
+            "page": "page",
+            "per_page": "per_page"
+          },
+          "body": {}
+        },
+        "sampleArguments": {
+          "site_id": "site-id",
+          "per_page": 10
+        },
+        "provenance": [
+          "https://open-api.netlify.com/swagger.json"
+        ],
+        "approvalRequired": false,
+        "evidence": {
+          "providerLiveValidation": "not-run",
+          "localValidation": "provider-request-fixture"
+        }
+      },
+      {
+        "name": "create_build",
+        "description": "Create build.",
+        "method": "POST",
+        "path": "/sites/{site_id}/builds",
+        "readOnly": false,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "site_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "description": "Value"
+            },
+            "branch": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "description": "Value"
+            },
+            "clear_cache": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "site_id"
+          ],
+          "additionalProperties": false
+        },
+        "bindings": {
+          "path": [
+            "site_id"
+          ],
+          "query": {
+            "branch": "branch",
+            "clear_cache": "clear_cache"
+          },
+          "body": {}
+        },
+        "sampleArguments": {
+          "site_id": "site-id",
+          "branch": "main",
+          "clear_cache": false
+        },
+        "provenance": [
+          "https://open-api.netlify.com/swagger.json"
+        ],
+        "approvalRequired": true,
+        "evidence": {
+          "providerLiveValidation": "not-run",
+          "localValidation": "provider-request-fixture"
+        }
+      }
+    ],
+    "workflow": {
+      "name": "Inspect site deployments then explicitly trigger a reviewed Git build",
+      "description": "Inspect site deployments then explicitly trigger a reviewed Git build. Read provider data first, then explicitly approve the selected change with operator write opt-in and a unique per-call approval key.",
+      "steps": [
+        "list_sites",
+        "list_deploys",
+        "create_build"
+      ]
+    },
+    "provenance": [
+      "https://open-api.netlify.com/swagger.json"
+    ],
+    "verification": "mock-only",
+    "providerLiveValidation": "not-run",
+    "capabilityEvidence": {
+      "local": {
+        "level": "Tested",
+        "operations": [
+          {
+            "name": "list_sites",
+            "level": "Tested",
+            "evidenceRefs": [
+              "Provider request/stdio contract tests"
+            ],
+            "method": "contract-fixture"
+          },
+          {
+            "name": "list_deploys",
+            "level": "Tested",
+            "evidenceRefs": [
+              "Provider request/stdio contract tests"
+            ],
+            "method": "contract-fixture"
+          },
+          {
+            "name": "create_build",
+            "level": "Tested",
+            "evidenceRefs": [
+              "Provider request/stdio contract tests"
+            ],
+            "method": "contract-fixture"
+          }
+        ],
+        "evidenceRefs": [
+          "Provider request/stdio contract tests"
+        ],
+        "mode": "local"
+      },
+      "managed": {
+        "level": "Documented",
+        "operations": [
+          {
+            "name": "list_sites",
+            "level": "Documented",
+            "evidenceRefs": [],
+            "method": "documentation"
+          },
+          {
+            "name": "list_deploys",
+            "level": "Documented",
+            "evidenceRefs": [],
+            "method": "documentation"
+          },
+          {
+            "name": "create_build",
+            "level": "Documented",
+            "evidenceRefs": [],
+            "method": "documentation"
+          }
+        ],
+        "evidenceRefs": [],
+        "mode": "managed"
+      }
+    },
+    "repoId": "netlify-mcp",
+    "product": "pipmcp",
+    "artifactType": "connector",
+    "sourceRevision": "8fc866bf4a6b1995342676067329cdbfd470bf352254fdec28ee035a75d712ab",
+    "managedAvailability": {
+      "status": "listed",
+      "checkedAt": "2026-11-08T13:20:45.156456+00:00"
+    }
+  },
+  "capabilityEvidence": {
+    "local": {
+      "level": "Tested",
+      "operations": [
+        {
+          "name": "list_sites",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        },
+        {
+          "name": "list_deploys",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        },
+        {
+          "name": "create_build",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        }
+      ],
+      "evidenceRefs": [
+        "Provider request/stdio contract tests"
+      ],
+      "mode": "local"
+    },
+    "managed": {
+      "level": "Documented",
+      "operations": [
+        {
+          "name": "list_sites",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        },
+        {
+          "name": "list_deploys",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        },
+        {
+          "name": "create_build",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        }
+      ],
+      "evidenceRefs": [],
+      "mode": "managed"
+    }
+  },
+  "utility": {
+    "problem": "Inspect site deployments then explicitly trigger a reviewed Git build. Read provider data first, then explicitly approve the selected change with operator write opt-in and a unique per-call approval key.",
+    "output": "Actual provider API results through local MCP tools"
+  },
+  "providerDocs": "https://open-api.netlify.com/swagger.json"
+}
