@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "version": "1.0.0",
+  "product": "pipmcp",
+  "credential": "PIPMCP_API_KEY",
+  "skills": [
+    {
+      "name": "pipmcp-netlify",
+      "description": "Connect AI agents to Netlify using one PipMCP API key and actual hosted tool discovery."
+    }
+  ],
+  "files": {
+    "skills/pipmcp-netlify/SKILL.md": "e61d4ff1cf3b28c7abb212b6545ff1d3e5cfc671eb2f31fb8a2f28720b469b3c"
+  }
+}
